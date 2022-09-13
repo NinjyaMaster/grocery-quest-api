@@ -1,23 +1,24 @@
 """
-Tests for the user API. Copied from Udemy recepi API. Did not work. I don't know why. I can't fix it
+Tests for the user API. Copied from Udemy recepi API.
+Did not work. I don't know why. I can't fix it
 """
-from django.test import TestCase    #no qa
-from django.contrib.auth import get_user_model #no qa
-from django.urls import reverse #no qa
+from django.test import TestCase    # noqa
+from django.contrib.auth import get_user_model # noqa
+from django.urls import reverse # noqa
 
-from rest_framework.test import APIClient #no qa
-from rest_framework import status #no qa
+from rest_framework.test import APIClient # noqa
+from rest_framework import status # noqa
 
 
 # CREATE_USER_URL = reverse('user:create')
 
 
-# def create_user(**params):
+#  def create_user(**params):
 #     """Create and return a new user."""
 #     return get_user_model().objects.create_user(**params)
 
 
-# class PublicUserApiTests(TestCase):
+#  class PublicUserApiTests(TestCase):
 #     """Test the public features of the user API."""
 
 #     def setUp(self):

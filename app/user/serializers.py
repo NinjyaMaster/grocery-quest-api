@@ -4,6 +4,9 @@ Serializers for the user API View.
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     """Selializer for new user regstraion"""
@@ -25,6 +28,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'The username should only contain alphanumetric characters'
                 )
+
+        try:
+            validate_email(email)
+        except ValidationError as e:
+            raise serializers.ValidationError(
+                'Not Valid Email: ' + e
+            )
+
         return attrs
 
     def create(self, validated_data):

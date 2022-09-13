@@ -9,7 +9,7 @@ class UserAPITestSetup(APITestCase):
 
     def setUp(self):
         self.register_url = reverse('user:register')
-        #self.login_url = reverse('login')
+        # self.login_url = reverse('login')
 
         self.user_data = {
             'email': 'email@gamil.com',
