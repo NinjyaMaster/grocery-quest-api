@@ -56,3 +56,13 @@ class UserAPITests(UserAPITestSetup):
             format="json",
         )
         self.assertEqual(res.status_code, 400)
+
+    def test_user_register_with_bad_email_error(self):
+        """Test error returned if email is not valid."""
+        self.user_data["email"] = "this is bad email"
+        res = self.client.post(
+            self.register_url,
+            self.user_data,
+            format="json",
+        )
+        self.assertEqual(res.status_code, 400)

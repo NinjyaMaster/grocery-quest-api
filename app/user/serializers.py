@@ -33,7 +33,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             validate_email(email)
         except ValidationError as e:
             raise serializers.ValidationError(
-                'Not Valid Email: ' + e
+                'Not Valid Email: ' + str(e)
             )
 
         return attrs
