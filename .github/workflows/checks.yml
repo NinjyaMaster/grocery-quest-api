@@ -5,6 +5,7 @@ on: [push]
 
 jobs:
   create-envfile:
+    runs-on: ubuntu-20.04
     steps:
       - name: Make envfile
         uses: SpicyPizza/create-envfile@1.3
