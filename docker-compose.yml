@@ -10,6 +10,8 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+    env_file:
+      - .env
     ## add wait_for_db for PostgreSQL
     command: >
       sh -c "python manage.py wait_for_db &&
