@@ -21,6 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['email', 'username', 'password']
 
     def validate(self, attrs):
+        """Validate the user"""
         email = attrs.get('email', '')
         username = attrs.get('username', '')
 
@@ -39,4 +40,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        """Create amd return a user with encrypted password"""
         return get_user_model().objects.create_user(**validated_data)

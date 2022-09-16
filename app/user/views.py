@@ -1,10 +1,19 @@
+"""
+Views for the user API
+"""
 from rest_framework import generics, status
 from rest_framework.response import Response
-"""
-Views for the use API
-"""
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from django.contrib.auth import get_user_model
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+from django.conf import settings
 
 from .serializers import RegisterSerializer
+from .utils import Util
+
+import jwt
 
 
 class RegisterView(generics.GenericAPIView):
@@ -17,7 +26,57 @@ class RegisterView(generics.GenericAPIView):
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
         user_data = serializer.data
+        user = get_user_model().objects.get(email=user_data['email'])
+
+        token = RefreshToken.for_user(user).access_token
+        current_site = get_current_site(request).domain
+        relativeLink = reverse('user:verify-email')
+        absurl = 'http://'+current_site + relativeLink + "?token=" + str(token)
+        email_body = 'Hi '+user.username +  \
+            ' Use link below to verify your email \n' \
+            + 'domain: ' + absurl
+        data = {
+            'domain': absurl,
+            'email_subject': 'Verify your email',
+            'email_body': email_body,
+            'email_to': [user.email]
+            }
+
+        Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)
+
+
+class VerifyEmailView(generics.GenericAPIView):
+    """Verify Email"""
+
+    def get(self, request):
+        """Verify Email or Send Verification Error"""
+        token = request.GET.get('token')
+        try:
+            payload = jwt.decode(
+                token,
+                settings.SECRET_KEY,
+                algorithms='HS256'
+            )
+            user = get_user_model().objects.get(id=payload['user_id'])
+            if not user.is_verified:
+                user.is_verified = True
+                user.save()
+            return Response(
+                {'email': 'Successfully activated'},
+                status=status.HTTP_200_OK
+            )
+
+        except jwt.ExpiredSignatureError as identifier: # noqa
+            # Write code to issue new token
+            return Response(
+                {'error': 'Activation Expired'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except jwt.exceptions.DecodeError as identifier: # noqa
+            return Response(
+                {'error': 'Invalid Token'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
