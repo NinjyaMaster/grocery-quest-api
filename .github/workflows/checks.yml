@@ -4,6 +4,18 @@ name: Checks
 on: [push]
 
 jobs:
+  create-envfile:
+    steps:
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@1.3
+        with:
+          envkey_EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          envkey_EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          envkey_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          envkey_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          file_name: .env
+          fail_on_empty: false
+
   test-lint:
     name: Test and Lint
     runs-on: ubuntu-20.04
