@@ -14,11 +14,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: copy envfile
-        working-directory: ../
+        working-directory: ../grocery-quest-api
         run: pwd
       - name: copy envfile2
         working-directory: ../
-        run: ls
+        run: ls grocery-quest-api
       - name: copy envfile3
         working-directory: ../
         run: cp grocery-quest-api/env.sample grocery-quest-api/.env
