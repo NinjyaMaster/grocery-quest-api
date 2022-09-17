@@ -13,15 +13,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Make envfile
-        uses: SpicyPizza/create-envfile@v1.3
-        with:
-          envkey_EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          envkey_EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-          envkey_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          envkey_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          file_name: .env
-          fail_on_empty: false
+      - name: copy envfile
+        uses: actions/checkout@v1
+        working-directory: ./app
+        run: cp env.sample .env
       - name: Checkout
         uses: actions/checkout@v2
       - name: Test
