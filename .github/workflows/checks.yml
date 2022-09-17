@@ -14,13 +14,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: copy envfile
-        working-directory: ../
+        working-directory: ./
         run: pwd
       - name: copy envfile2
-        working-directory: ../
+        working-directory: ./
         run: ls
       - name: copy envfile3
-        working-directory: ../
+        working-directory: ./
         run: cp env.sample .env
       - name: Checkout
         uses: actions/checkout@v2
