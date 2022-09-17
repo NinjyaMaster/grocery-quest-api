@@ -22,6 +22,7 @@ jobs:
           envkey_EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           envkey_EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           envkey_EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
           file_name: .env
           fail_on_empty: false
       - name: Test
