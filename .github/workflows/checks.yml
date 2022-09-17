@@ -15,8 +15,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: copy envfile
         working-directory: ../
-        run: ls
         run: pwd
+      - name: copy envfile2
+        working-directory: ../
+        run: ls
       - name: Checkout
         uses: actions/checkout@v2
       - name: Test
