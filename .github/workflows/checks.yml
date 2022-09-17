@@ -19,6 +19,9 @@ jobs:
       - name: copy envfile2
         working-directory: ../
         run: ls
+      - name: copy envfile3
+        working-directory: ../
+        run: cp env.sample .env
       - name: Checkout
         uses: actions/checkout@v2
       - name: Test
