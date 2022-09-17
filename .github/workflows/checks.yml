@@ -14,7 +14,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: copy envfile
-        uses: actions/checkout@v1
         working-directory: ./app
         run: cp env.sample .env
       - name: Checkout
