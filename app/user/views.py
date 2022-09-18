@@ -10,7 +10,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.conf import settings
 
-from .serializers import RegisterSerializer
+from .serializers import (
+                            RegisterSerializer,
+                            LoginSerializer,
+                            EmailVerificationSerializer
+)
+
 from .utils import Util
 
 import jwt
@@ -50,6 +55,7 @@ class RegisterView(generics.GenericAPIView):
 
 class VerifyEmailView(generics.GenericAPIView):
     """Verify Email"""
+    serializer_class = EmailVerificationSerializer
 
     def get(self, request):
         """Verify Email or Send Verification Error"""
@@ -80,3 +86,13 @@ class VerifyEmailView(generics.GenericAPIView):
                 {'error': 'Invalid Token'},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class LoginAPIView(generics.GenericAPIView):
+    """Authenticate and return tokens for user"""
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

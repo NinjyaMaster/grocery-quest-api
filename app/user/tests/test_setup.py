@@ -9,22 +9,11 @@ class UserAPITestSetup(APITestCase):
 
     def setUp(self):
         self.register_url = reverse('user:register')
-        # self.login_url = reverse('login')
+        self.login_url = reverse('user:login')
+        self.verifyemail_url = reverse('user:verify-email')
 
         self.user_data = {
             'email': 'email@gamil.com',
-            'username': 'username1',
-            'password': 'testpassword',
-        }
-
-        self.duplicate_email_user_data = {
-            'email': 'email@gamil.com',
-            'username': 'username2',
-            'password': 'testpassword',
-        }
-
-        self.duplicate_username_user_data = {
-            'email': 'email2@gamil.com',
             'username': 'username1',
             'password': 'testpassword',
         }
