@@ -16,4 +16,5 @@ urlpatterns = [
             views.VerifyEmailView.as_view(),
             name='verify-email'
         ),
+    path('me/', views.ManageUserView.as_view(), name='me'),
 ]

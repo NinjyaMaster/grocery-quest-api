@@ -1,7 +1,7 @@
 """
 Views for the user API
 """
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -9,11 +9,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django.conf import settings
+from .renderers import UserRenderer
 
 from .serializers import (
                             RegisterSerializer,
                             LoginSerializer,
-                            EmailVerificationSerializer
+                            EmailVerificationSerializer,
+                            UserSerializer
 )
 
 from .utils import Util
@@ -24,6 +26,7 @@ import jwt
 class RegisterView(generics.GenericAPIView):
     """Register user"""
     serializer_class = RegisterSerializer
+    renderer_classes = (UserRenderer, )
 
     def post(self, request):
         """Create new user"""
@@ -96,3 +99,13 @@ class LoginAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ManageUserView(generics.RetrieveUpdateAPIView):
+    """Manage the authenticated user"""
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        """Retrieve and return the authenticated user"""
+        return self.request.user
