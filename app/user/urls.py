@@ -5,6 +5,10 @@ from django.urls import path
 
 from user import views
 
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+)
+
 
 app_name = 'user'
 
@@ -17,4 +21,5 @@ urlpatterns = [
             name='verify-email'
         ),
     path('me/', views.ManageUserView.as_view(), name='me'),
+    path('token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
