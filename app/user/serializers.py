@@ -2,11 +2,15 @@
 Serializers for the user API View.
 """
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework import serializers
+
+from rest_framework import serializers, status
 from rest_framework.exceptions import AuthenticationFailed
 
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -122,3 +126,52 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
 
         return user
+
+
+class RequestPasswordResetSerializer(serializers.Serializer):
+    """Serializer for request password reset"""
+
+    email = serializers.EmailField(min_length=2)
+    redirect_url = serializers.CharField(max_length=500, required=False)
+
+    class Meta:
+        fields = ['email']
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    """Serializer for set new password"""
+    password = serializers.CharField(
+        min_length=6, max_length=68, write_only=True)
+    token = serializers.CharField(
+        min_length=1, write_only=True)
+    uidb64 = serializers.CharField(
+        min_length=1, write_only=True)
+
+    class Meta:
+        fields = ['password', 'token', 'uidb64']
+
+    def validate(self, attrs):
+        try:
+            password = attrs.get('password')
+            token = attrs.get('token')
+            uidb64 = attrs.get('uidb64')
+
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = get_user_model().objects.get(id=id)
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise AuthenticationFailed(
+                    'The reset link is invalid',
+                    status.HTTP_401_UNAUTHORIZED
+                    )
+
+            user.set_password(password)
+            user.save()
+
+            return (user)
+        except Exception as e: # noqa
+            raise AuthenticationFailed(
+                'The reset link is invalid',
+                status.HTTP_401_UNAUTHORIZED
+                )
+
+        return super().validate(attrs)

@@ -22,4 +22,19 @@ urlpatterns = [
         ),
     path('me/', views.ManageUserView.as_view(), name='me'),
     path('token-refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path(
+        'request-password-reset/',
+        views.RequestPasswordResetEmail.as_view(),
+        name='request-password-reset'
+        ),
+    path(
+        'Input-new-password-reset/<uidb64>/<token>/',
+        views.ValidatePasswordResetEmail.as_view(),
+        name='validate-password-reset'
+        ),
+    path(
+        'complete-password-reset/',
+        views.CompletePasswordReset.as_view(),
+        name='complete-password-reset'
+        )
 ]
