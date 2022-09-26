@@ -28,7 +28,7 @@ urlpatterns = [
         name='request-password-reset'
         ),
     path(
-        'Input-new-password-reset/<uidb64>/<token>/',
+        'validate-password-reset/<uidb64>/<token>/',
         views.ValidatePasswordResetEmail.as_view(),
         name='validate-password-reset'
         ),
