@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'user',
     'rest_framework',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,9 +55,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
+
+#CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:8080",
+     "exp://192.168.4.24:19000",
+     "http://localhost:8000",
+ ]
 
 TEMPLATES = [
     {

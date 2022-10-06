@@ -4,3 +4,4 @@ djangorestframework>=3.12.4,<3.13
 psycopg2>=2.8.6,<2.9
 drf-spectacular>=0.15.1,<0.16
 djangorestframework-simplejwt>=4.6.0,<4.7
+django-cors-headers>=3.13.0,<3.15
