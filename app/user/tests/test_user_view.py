@@ -3,6 +3,7 @@ Tests for the user API.
 """
 from .test_setup import UserAPITestSetup
 from django.contrib.auth import get_user_model
+from django.core import mail
 
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -28,6 +29,8 @@ class UserAPITests(UserAPITestSetup):
         self.assertEqual(res.data['email'], self.user_data['email'])
         self.assertEqual(res.data['username'], self.user_data['username'])
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Verify your email')
 
     def test_user_register_with_email_exists_error(self):
         """Test error returned if user with email exists."""
@@ -37,6 +40,8 @@ class UserAPITests(UserAPITestSetup):
             format="json",
         )
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Verify your email')
 
         non_unique_email_user_data = self.user_data.copy()
         non_unique_email_user_data['username'] = 'different'
@@ -47,6 +52,8 @@ class UserAPITests(UserAPITestSetup):
             format="json",
         )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, 'Verify your email')
 
     def test_user_register_with_username_exists_error(self):
         """Test error returned if user with username exists."""

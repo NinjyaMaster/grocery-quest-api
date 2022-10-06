@@ -4,6 +4,7 @@ Views for the user API
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.exceptions import ErrorDetail
 
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
@@ -33,6 +34,25 @@ from .utils import Util
 import jwt
 
 
+def send_verification_email(request):
+    user = get_user_model().objects.get(email=request.data['email'])
+    token = RefreshToken.for_user(user).access_token
+    current_site = get_current_site(request).domain
+    relativeLink = reverse('user:verify-email')
+    absurl = 'http://'+current_site + relativeLink + "?token=" + str(token)
+    email_body = 'Hi '+user.username +  \
+        ' Use link below to verify your email \n' \
+        + 'domain: ' + absurl
+    data = {
+        'domain': absurl,
+        'email_subject': 'Verify your email',
+        'email_body': email_body,
+        'email_to': [user.email]
+    }
+
+    Util.send_email(data)
+
+
 class RegisterView(generics.GenericAPIView):
     """Register user"""
     serializer_class = RegisterSerializer
@@ -42,26 +62,25 @@ class RegisterView(generics.GenericAPIView):
         """Create new user"""
         user = request.data
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+
+        if not serializer.is_valid():
+            errors = serializer.errors
+            if 'email' in errors and \
+                    'email already exists' in errors['email'][0]:
+                send_verification_email(request)
+                return Response(
+                    {
+                        'email': [ErrorDetail(
+                            string='user with this email already exists.',
+                            code='unique'
+                            )]
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
         serializer.save()
         user_data = serializer.data
-        user = get_user_model().objects.get(email=user_data['email'])
-
-        token = RefreshToken.for_user(user).access_token
-        current_site = get_current_site(request).domain
-        relativeLink = reverse('user:verify-email')
-        absurl = 'http://'+current_site + relativeLink + "?token=" + str(token)
-        email_body = 'Hi '+user.username +  \
-            ' Use link below to verify your email \n' \
-            + 'domain: ' + absurl
-        data = {
-            'domain': absurl,
-            'email_subject': 'Verify your email',
-            'email_body': email_body,
-            'email_to': [user.email]
-            }
-
-        Util.send_email(data)
+        send_verification_email(request)
 
         return Response(user_data, status=status.HTTP_201_CREATED)
 
