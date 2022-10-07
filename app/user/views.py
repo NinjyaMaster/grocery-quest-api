@@ -60,8 +60,7 @@ class RegisterView(generics.GenericAPIView):
 
     def post(self, request):
         """Create new user"""
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        serializer = self.serializer_class(data=request.data)
 
         if not serializer.is_valid():
             errors = serializer.errors
