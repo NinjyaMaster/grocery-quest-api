@@ -107,7 +107,7 @@ class VerifyEmailView(generics.GenericAPIView):
             )
 
         except jwt.ExpiredSignatureError as identifier: # noqa
-            # Write code to issue new token
+            send_verification_email(request)
             return Response(
                 {'error': 'Activation Expired'},
                 status=status.HTTP_400_BAD_REQUEST
