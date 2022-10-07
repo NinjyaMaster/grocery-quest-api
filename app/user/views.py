@@ -125,7 +125,20 @@ class LoginAPIView(generics.GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            errors = serializer.errors
+            if 'Mail is not verified' in errors['error']:
+                send_verification_email(request)
+                return Response(
+                    {
+                        'email': [ErrorDetail(
+                            string='Mail is not verified',
+                            code='unique'
+                            )]
+                    }, status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                return Response(errors, status=status.HTTP_401_UNAUTHORIZED)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

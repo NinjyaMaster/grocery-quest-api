@@ -91,12 +91,18 @@ class UserAPITests(UserAPITestSetup):
             self.user_data,
             format="json"
         )
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Verify your email')
+
         res = self.client.post(
             self.login_url,
             self.user_data,
             format="json"
         )
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, 'Verify your email')
+        self.assertEqual(mail.outbox[1].to[0], self.user_data['email'])
 
     def test_user_can_login_with_verified_email(self):
         """Test success returned if user login with verified email"""

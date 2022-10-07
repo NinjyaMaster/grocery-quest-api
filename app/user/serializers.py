@@ -95,11 +95,17 @@ class LoginSerializer(serializers.Serializer):
         )
 
         if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
+            raise serializers.ValidationError(
+                'Invalid credentials, try again'
+                )
         if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
+            raise serializers.ValidationError(
+                'Account disabled, contact admin'
+                )
         if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
+            raise serializers.ValidationError(
+                'Mail is not verified'
+                )
 
         return {
             'email': user.email,
