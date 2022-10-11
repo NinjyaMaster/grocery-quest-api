@@ -131,7 +131,7 @@ class LoginAPIView(generics.GenericAPIView):
                 send_verification_email(request)
                 return Response(
                     {
-                        'email': [ErrorDetail(
+                        'error': [ErrorDetail(
                             string='Mail is not verified',
                             code='unique'
                             )]
