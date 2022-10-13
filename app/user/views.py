@@ -56,7 +56,7 @@ def send_verification_email(request):
 class RegisterView(generics.GenericAPIView):
     """Register user"""
     serializer_class = RegisterSerializer
-    renderer_classes = (UserRenderer, )
+    #renderer_classes = (UserRenderer, )
 
     def post(self, request):
         """Create new user"""
@@ -69,8 +69,17 @@ class RegisterView(generics.GenericAPIView):
                 send_verification_email(request)
                 return Response(
                     {
-                        'email': [ErrorDetail(
+                        'error': [ErrorDetail(
                             string='user with this email already exists.',
+                            code='unique'
+                            )]
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            if 'username' in errors and \
+                    'user with this username already exists' in errors['username'][0]:
+                return Response(
+                    {
+                        'error': [ErrorDetail(
+                            string='user with this username already exists.',
                             code='unique'
                             )]
                     }, status=status.HTTP_400_BAD_REQUEST)
