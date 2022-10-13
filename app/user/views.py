@@ -18,7 +18,7 @@ from django.utils.encoding import (
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-from .renderers import UserRenderer
+from .renderers import UserRenderer # noqa , it's not used. I leave it because for future reference
 
 from .serializers import (
                             RegisterSerializer,
@@ -56,7 +56,7 @@ def send_verification_email(request):
 class RegisterView(generics.GenericAPIView):
     """Register user"""
     serializer_class = RegisterSerializer
-    #renderer_classes = (UserRenderer, )
+    # renderer_classes = (UserRenderer, )
 
     def post(self, request):
         """Create new user"""
@@ -75,7 +75,8 @@ class RegisterView(generics.GenericAPIView):
                             )]
                     }, status=status.HTTP_400_BAD_REQUEST)
             if 'username' in errors and \
-                    'user with this username already exists' in errors['username'][0]:
+                    'user with this username already exists' in \
+                    errors['username'][0]:
                 return Response(
                     {
                         'error': [ErrorDetail(
