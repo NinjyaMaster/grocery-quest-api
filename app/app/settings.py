@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =  ['e7ba-68-5-11-7.ngrok.io'] 
 
 AUTH_USER_MODEL = 'core.User'
 
