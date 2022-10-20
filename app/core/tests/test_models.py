@@ -4,6 +4,8 @@ Tests for models.
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+from core import models
+
 
 class ModelTests(TestCase):
     """Test models."""
@@ -87,3 +89,29 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+    def test_create_store(self):
+        """Test creating a store is successful."""
+        user = get_user_model().objects.create_user(
+                email='test@example.com',
+                password='testpassword',
+                username='testusername',
+        )
+        store = models.Store.objects.create(
+            user=user,
+            name="Whole Foods",
+        )
+        self.assertEqual(str(store), store.name)
+
+    def test_create_grocery(self):
+        """Test creating a grocery"""
+        user = get_user_model().objects.create_user(
+                email='test@example.com',
+                password='testpassword',
+                username='testusername',
+        )
+        grocery = models.Grocery.objects.create(
+            user=user,
+            name="tacos"
+        )
+        self.assertEqual(str(grocery), grocery.name)

@@ -27,7 +27,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS =  ['e7ba-68-5-11-7.ngrok.io'] 
+ALLOWED_HOSTS =  [
+    'e7ba-68-5-11-7.ngrok.io',
+    '127.0.0.1'
+    ]
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -42,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'user',
+    'groceries',
+    'myProfile',
     'rest_framework',
     'drf_spectacular',
     'corsheaders',
