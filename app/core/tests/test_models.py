@@ -115,3 +115,23 @@ class ModelTests(TestCase):
             name="tacos"
         )
         self.assertEqual(str(grocery), grocery.name)
+
+    def test_create_myProfile(self):
+        """Test creating a MyProfile"""
+        user = get_user_model().objects.create_user(
+                email='test@example.com',
+                password='testpassword',
+                username='testusername',
+        )
+        friend = get_user_model().objects.create_user(
+                email='friend@example.com',
+                password='friendpassword',
+                username='friendusername',
+        )
+        myProfile = models.MyProfile.objects.create(
+            user=user
+        )
+        myProfile.friends.add(friend)
+
+        self.assertEqual(str(myProfile), user.username)
+        self.assertEqual(myProfile.friends.all().first(), friend)

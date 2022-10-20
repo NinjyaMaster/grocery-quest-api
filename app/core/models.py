@@ -103,3 +103,6 @@ class MyProfile(models.Model):
         on_delete=models.CASCADE,
     )
     friends = models.ManyToManyField('User', related_name='friends')
+
+    def __str__(self):
+        return self.user.username
