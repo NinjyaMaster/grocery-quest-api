@@ -70,7 +70,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Store(models.Model):
     """Store object."""
-    user = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
@@ -86,7 +86,7 @@ class Store(models.Model):
 class Grocery(models.Model):
     """Grocery Item"""
     name = models.CharField(max_length=255)
-    user = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
@@ -98,7 +98,7 @@ class Grocery(models.Model):
 
 class MyProfile(models.Model):
     """MyProfile object"""
-    user = models.ForeignKey(
+    owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
