@@ -75,9 +75,9 @@ class Store(models.Model):
         on_delete=models.CASCADE,
     )
     name = models.CharField(max_length=255)
-    groceries = models.ManyToManyField('Grocery')
+    groceries = models.ManyToManyField('Grocery', blank=True)
     is_completed = models.BooleanField(default=False)
-    shares = models.ManyToManyField('User', related_name='shares')
+    shares = models.ManyToManyField('User', related_name='shares', blank=True)
 
     def __str__(self):
         return self.name
@@ -102,7 +102,11 @@ class MyProfile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    friends = models.ManyToManyField('User', related_name='friends')
+    friends = models.ManyToManyField(
+                                    'User',
+                                    related_name='friends',
+                                    blank=True
+                                )
 
     def __str__(self):
         return self.owner.username
