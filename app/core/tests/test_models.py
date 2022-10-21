@@ -98,7 +98,7 @@ class ModelTests(TestCase):
                 username='testusername',
         )
         store = models.Store.objects.create(
-            user=user,
+            owner=user,
             name="Whole Foods",
         )
         self.assertEqual(str(store), store.name)
@@ -111,7 +111,7 @@ class ModelTests(TestCase):
                 username='testusername',
         )
         grocery = models.Grocery.objects.create(
-            user=user,
+            owner=user,
             name="tacos"
         )
         self.assertEqual(str(grocery), grocery.name)
@@ -129,9 +129,9 @@ class ModelTests(TestCase):
                 username='friendusername',
         )
         myProfile = models.MyProfile.objects.create(
-            user=user
+            owner=user
         )
         myProfile.friends.add(friend)
 
-        self.assertEqual(str(myProfile), user.username)
+        self.assertEqual(str(myProfile), myProfile.owner.username)
         self.assertEqual(myProfile.friends.all().first(), friend)

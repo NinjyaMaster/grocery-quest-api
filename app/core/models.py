@@ -105,4 +105,4 @@ class MyProfile(models.Model):
     friends = models.ManyToManyField('User', related_name='friends')
 
     def __str__(self):
-        return self.user.username
+        return self.owner.username
