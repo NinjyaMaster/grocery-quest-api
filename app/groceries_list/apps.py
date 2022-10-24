@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class GroceriesConfig(AppConfig):
+class GroceriesListConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'groceries'
+    name = 'groceries_list'

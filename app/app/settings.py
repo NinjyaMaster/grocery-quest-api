@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'user',
-    'groceries',
+    'groceries_list',
     'myProfile',
     'rest_framework',
     'drf_spectacular',
