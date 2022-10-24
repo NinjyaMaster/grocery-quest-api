@@ -6,10 +6,10 @@ from django.contrib.auth import get_user_model
 
 from rest_framework.test import APITestCase
 
-from core.models import Store
+from core.models import Store, Grocery
 
 
-class GroceriesAPITestSetup(APITestCase):
+class GroceriesListAPITestSetup(APITestCase):
 
     def setUp(self):
         self.stores_url = reverse('groceries_list:stores')
@@ -24,23 +24,29 @@ class GroceriesAPITestSetup(APITestCase):
     def tearDown(self):
         return super().tearDown()
 
-    def create_user(self):
+    def create_user(self, **params):
         """Create and return user."""
-        user = get_user_model().objects.create_user(
-            email="email@gamil.com",
-            password="testname",
-            username="testpassword"
-        )
+        defaults = {
+            'email': "email@gamil.com",
+            'password': "testname",
+            'username': "testpassword"
+        }
+        defaults.update(params)
+        user = get_user_model().objects.create_user(**defaults)
         user.is_verified = True
-        self.client.force_authenticate(user)
-
+        self.client.force_authenticate(user=user)
         return user
 
-    def store_detail_url(store_id):
+    def store_detail_url(self, store_id):
         """Create and return a store detail URL."""
         return reverse('groceries_list:store', args=[store_id])
 
-    def create_store(self, owner, name):
+    def create_store(self, **params):
         """Create and return a sample store."""
-        store = Store.objects.create(owner=owner, name=name)
+        store = Store.objects.create(**params)
         return store
+
+    def create_grocery(self, **params):
+        """Create and return a sample grocery."""
+        grocery = Grocery.objects.create(**params)
+        return grocery

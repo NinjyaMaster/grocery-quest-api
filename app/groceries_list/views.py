@@ -9,15 +9,18 @@ from rest_framework.generics import (
 
 from .permissions import IsOwner
 from .serializers import (
-                            StoreSerializer
+                            StoreDetailSerializer,
+                            StoresListSerializer,
+                            GrocerySerializer
     )
 from core.models import (
-    Store
+    Store,
+    Grocery
 )
 
 
 class StoreListAPIView(ListCreateAPIView):
-    serializer_class = StoreSerializer
+    serializer_class = StoresListSerializer
     queryset = Store.objects.all()
     permission_classes = (permissions.IsAuthenticated, IsOwner,)
 
@@ -29,9 +32,19 @@ class StoreListAPIView(ListCreateAPIView):
 
 
 class StoreDetailAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = StoreSerializer
+    serializer_class = StoreDetailSerializer
     permission_classes = (permissions.IsAuthenticated, IsOwner,)
     queryset = Store.objects.all()
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
+
+
+class GroceryAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = GrocerySerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    queryset = Grocery.objects.all()
     lookup_field = "id"
 
     def get_queryset(self):
