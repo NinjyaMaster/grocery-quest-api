@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -91,6 +90,7 @@ class Grocery(models.Model):
         on_delete=models.CASCADE,
     )
     is_completed = models.BooleanField(default=False)
+    store_id = models.IntegerField(default=False)
 
     def __str__(self):
         return self.name
