@@ -17,7 +17,7 @@ class GroceryAPITests(GroceriesListAPITestSetup):
         grocery_data = {
             'owner': user,
             'name': 'Tomato',
-            'store_id':1
+            'store_id': 1
         }
         grocery = self.create_grocery(**grocery_data)
         self.client.logout()
