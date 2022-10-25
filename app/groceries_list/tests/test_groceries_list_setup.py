@@ -13,7 +13,6 @@ class GroceriesListAPITestSetup(APITestCase):
 
     def setUp(self):
         self.stores_url = reverse('groceries_list:stores')
-
         self.user_data = {
             'email': 'email@gamil.com',
             'username': 'testname',
@@ -50,3 +49,7 @@ class GroceriesListAPITestSetup(APITestCase):
         """Create and return a sample grocery."""
         grocery = Grocery.objects.create(**params)
         return grocery
+
+    def grocery_detail_url(self, grocery_id):
+        """Create and return a grocery detail URL."""
+        return reverse('groceries_list:grocery', args=[grocery_id])
