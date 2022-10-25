@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import (
@@ -90,7 +91,7 @@ class Grocery(models.Model):
         on_delete=models.CASCADE,
     )
     is_completed = models.BooleanField(default=False)
-    store_id = models.IntegerField(default=False)
+    store_id = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name

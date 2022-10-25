@@ -11,10 +11,11 @@ from core.models import (
 
 class GrocerySerializer(serializers.ModelSerializer):
     """Serializer for Grocery"""
+    store_id = serializers.IntegerField()
 
     class Meta:
         model = Grocery
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'store_id']
         read_only_fields = ['id']
 
 
