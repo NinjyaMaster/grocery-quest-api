@@ -15,7 +15,7 @@ class GrocerySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Grocery
-        fields = ['id', 'name', 'store_id']
+        fields = ['id', 'name', 'store_id', 'is_completed']
         read_only_fields = ['id']
 
 
@@ -25,7 +25,7 @@ class StoreDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ['id', 'name', 'groceries']
+        fields = ['id', 'name', 'groceries', 'is_completed']
         read_only_fields = ['id']
 
 
@@ -34,5 +34,5 @@ class StoresListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'is_completed']
         read_only_fields = ['id']
