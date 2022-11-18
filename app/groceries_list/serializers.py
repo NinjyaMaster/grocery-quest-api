@@ -31,8 +31,9 @@ class StoreDetailSerializer(serializers.ModelSerializer):
 
 class StoresListSerializer(serializers.ModelSerializer):
     """Serializer for Stores List."""
+    groceries = GrocerySerializer(many=True, required=False)
 
     class Meta:
         model = Store
-        fields = ['id', 'name', 'is_completed']
+        fields = ['id', 'name', 'groceries', 'is_completed']
         read_only_fields = ['id']
