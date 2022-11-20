@@ -89,6 +89,7 @@ class Grocery(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+    qty = models.IntegerField(default=1)
     is_completed = models.BooleanField(default=False)
     store_id = models.IntegerField(default=0)
 
