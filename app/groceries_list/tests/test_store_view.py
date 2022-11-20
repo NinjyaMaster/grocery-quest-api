@@ -86,6 +86,52 @@ class StoreAPITests(GroceriesListAPITestSetup):
             self.assertEqual(getattr(store, k), v)
         self.assertEqual(store.owner, user)
 
+    def test_create_store_with_groceries(self):
+        """Test creating a store that has groceries"""
+        user = self.create_user()
+        payload = {
+            'name': 'lululemon',
+            'groceries': [
+                {
+                    "name": "glucorse",
+                    "qty": 1,
+                    "store_id": 0,
+                    "is_completed": False
+                },
+                {
+                    "name": "pants",
+                    "qty": 2,
+                    "store_id": 0,
+                    "is_completed": False
+                }
+            ],
+            "is_completed": False
+        }
+        res = self.client.post(self.stores_url, payload, format='json')
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        store_id = res.data['id']
+        stores = Store.objects.filter(id=store_id)
+        store = stores[0]
+
+        # Set payload groceries's store_id
+        for grocery_obj in payload['groceries']:
+            grocery_obj['store_id'] = store.id
+
+        # Check if payload is same store model
+        for key, value in payload.items():
+            if(key != 'groceries'):
+                self.assertEqual(getattr(store, key), value)
+        self.assertEqual(store.owner, user)
+
+        # Check if new groceries is created
+        for grocery_obj in payload['groceries']:
+            exists = store.groceries.filter(
+                name=grocery_obj['name'],
+                owner=user,
+            ).exists()
+            self.assertTrue(exists)
+
     def test_unauthorized_user_create_store_error(self):
         """Test creating a store fail."""
         payload = {

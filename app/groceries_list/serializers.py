@@ -37,3 +37,18 @@ class StoresListSerializer(serializers.ModelSerializer):
         model = Store
         fields = ['id', 'name', 'groceries', 'is_completed']
         read_only_fields = ['id']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        if 'groceries' not in validated_data:
+            groceries_data = {}
+        else:
+            groceries_data = validated_data.pop('groceries')
+
+        store = Store.objects.create(**validated_data)
+        for grocery_data in groceries_data:
+            grocery_data['store_id'] = store.id
+            grocery = Grocery.objects.create(owner=user, **grocery_data)
+            store.groceries.add(grocery)
+
+        return store
