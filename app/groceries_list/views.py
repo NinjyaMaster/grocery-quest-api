@@ -70,9 +70,22 @@ class StoreDetailAPIView(RetrieveUpdateDestroyAPIView):
         data = request.data
         store_id = kwargs['id']
         store = get_object_or_404(Store, pk=store_id)
+
         for key, value in data.items():
-            setattr(store, key, value)
+            # create new grocery
+            if(key == "groceries"):
+                for grocery in value:
+                    store.groceries.create(
+                                        owner=request.user,
+                                        name=grocery['name'],
+                                        store_id=store_id,
+                                        is_completed=False
+                                        )
+            # set attribute
+            else:
+                setattr(store, key, value)
         store.save()
+
         if "is_completed" in data.keys() and data['is_completed']:
             groceries = store.groceries.all()
             if groceries:

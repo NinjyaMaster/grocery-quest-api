@@ -114,10 +114,6 @@ class StoreAPITests(GroceriesListAPITestSetup):
         stores = Store.objects.filter(id=store_id)
         store = stores[0]
 
-        # Set payload groceries's store_id
-        for grocery_obj in payload['groceries']:
-            grocery_obj['store_id'] = store.id
-
         # Check if payload is same store model
         for key, value in payload.items():
             if(key != 'groceries'):
@@ -129,6 +125,7 @@ class StoreAPITests(GroceriesListAPITestSetup):
             exists = store.groceries.filter(
                 name=grocery_obj['name'],
                 owner=user,
+                store_id=store_id
             ).exists()
             self.assertTrue(exists)
 
@@ -245,3 +242,64 @@ class StoreAPITests(GroceriesListAPITestSetup):
         grocery2_res = self.client.get(self.grocery_detail_url(grocery2.id))
         self.assertTrue(grocery1_res.data['is_completed'])
         self.assertTrue(grocery2_res.data['is_completed'])
+
+    def test_update_store_add_groceries(self):
+        """Test update store to add new groceries"""
+        user = self.create_user()
+        store_data = {
+                        'owner': user,
+                        'name': "lulu lemon"
+                    }
+        store = self.create_store(**store_data)
+        store_detail_url = self.store_detail_url(store.id)
+        store.groceries.create(
+                            owner=user,
+                            name="leggins",
+                            store_id=store.id,
+                            is_completed=False
+                            )
+        store.groceries.create(
+                            owner=user,
+                            name="Tank Top",
+                            store_id=store.id,
+                            is_completed=False
+                            )
+        new_store_data = {
+            'name': 'lulu lemon',
+            'is_completed': False,
+            'groceries': [
+                {
+                    "name": "pants",
+                    "qty": 2,
+                    "store_id": store.id,
+                    "is_completed": False
+                },
+                {
+                    "name": "jacket",
+                    "qty": 2,
+                    "store_id": store.id,
+                    "is_completed": False
+                }
+            ]
+        }
+        store_res = self.client.patch(
+            store_detail_url,
+            new_store_data,
+            format="json"
+        )
+        self.assertEqual(store_res.status_code, status.HTTP_202_ACCEPTED)
+        new_store_res = self.client.get(store_detail_url)
+        new_store_res_data = new_store_res.data
+        self.assertEqual(new_store_res.status_code, status.HTTP_200_OK)
+
+        # Check if total number of groceries in the store is 4
+        self.assertEqual(len(new_store_res_data['groceries']), 4)
+
+        # Check if the newly created grocery is existed in the store
+        for grocery_obj in new_store_data['groceries']:
+            exists = store.groceries.filter(
+                name=grocery_obj['name'],
+                owner=user,
+                store_id=store.id
+            ).exists()
+            self.assertTrue(exists)
