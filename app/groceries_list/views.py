@@ -57,7 +57,7 @@ class StoreDetailAPIView(RetrieveUpdateDestroyAPIView):
         groceries = Grocery.objects.filter(Q(store_id=store_id))
         for grocery in groceries:
             grocery.delete()
-        return Response(data={'id':store_id}, status=status.HTTP_200_OK)
+        return Response(data={'id': store_id}, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         """Put/Update Store Detail. Copy patch method"""
